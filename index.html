@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Racing Parts | Calculadora</title>
+  <style>
+    :root {
+      --bg: #07090d;
+      --panel: #10141a;
+      --line: #28313c;
+      --text: #f4f6f8;
+      --muted: #8a96a5;
+      --gold: #f0ad27;
+      --gold2: #ffd166
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 80% -10%, rgba(240, 173, 39, .14), transparent 28%), #080a0e;
+      color: var(--text);
+      font-family: Inter, Segoe UI, Arial, sans-serif
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 245px;
+      padding: 22px 15px;
+      background: #090b0f;
+      border-right: 1px solid var(--line);
+      z-index: 5
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 3px 8px 25px
+    }
+
+    .logo-mark {
+      width: 43px;
+      height: 43px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--gold2), #b86e00);
+      color: #111;
+      font-size: 21px;
+      font-weight: 900
+    }
+
+    .logo-name {
+      font-weight: 900;
+      letter-spacing: 1.7px;
+      font-size: 16px
+    }
+
+    .logo-sub {
+      display: block;
+      color: #687482;
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      margin-top: 3px
+    }
+
+    .nav-title {
+      color: #586473;
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 0 10px 8px
+    }
+
+    .side-link {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 13px;
+      margin: 3px 0;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #aeb8c4;
+      text-align: left
+    }
+
+    .side-link:hover,
+    .side-link.active {
+      background: #191f27;
+      color: #fff
+    }
+
+    .side-link.active {
+      box-shadow: inset 3px 0 0 var(--gold)
+    }
+
+    .side-link .ico {
+      width: 23px;
+      text-align: center
+    }
+
+    .side-note {
+      position: absolute;
+      bottom: 20px;
+      left: 22px;
+      color: #56616e;
+      font-size: 10px;
+      line-height: 1.6
+    }
+
+    .content {
+      margin-left: 245px;
+      width: calc(100% - 245px);
+      padding: 27px 32px 55px
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 22px
+    }
+
+    .eyebrow {
+      color: var(--gold2);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 2.2px;
+      text-transform: uppercase
+    }
+
+    h1 {
+      margin: 5px 0 0;
+      font-size: 30px
+    }
+
+    .top-total {
+      background: #141a21;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 17px;
+      text-align: right;
+      min-width: 180px
+    }
+
+    .top-total span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase
+    }
+
+    .top-total b {
+      display: block;
+      color: var(--gold2);
+      font-size: 19px;
+      margin-top: 3px
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+      margin-bottom: 16px
+    }
+
+    .stat {
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: #12171d;
+      border: 1px solid var(--line)
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      margin-top: 6px
+    }
+
+    .gold {
+      color: var(--gold2)
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(350px, .97fr);
+      gap: 16px
+    }
+
+    .card {
+      background: #10141a;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .22)
+    }
+
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 17px
+    }
+
+    .card-title h2 {
+      margin: 0;
+      font-size: 16px
+    }
+
+    .pill {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .8px;
+      color: #aab4bf;
+      background: #202730;
+      border: 1px solid #2b3440;
+      border-radius: 999px;
+      padding: 5px 8px
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px
+    }
+
+    .full {
+      grid-column: 1/-1
+    }
+
+    label {
+      display: block;
+      color: #adb7c3;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      margin-bottom: 7px
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 10px;
+      border: 1px solid #2a333e;
+      background: #0c1015;
+      color: #f3f5f7;
+      outline: 0
+    }
+
+    select:focus,
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(240, 173, 39, .08)
+    }
+
+    .search {
+      position: relative
+    }
+
+    .search input {
+      padding-left: 36px
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 30px;
+      color: #65717f;
+      font-size: 18px
+    }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      margin-top: 15px
+    }
+
+    .btn {
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-weight: 900;
+      border: 1px solid transparent
+    }
+
+    .btn-main {
+      flex: 1;
+      background: linear-gradient(135deg, var(--gold2), #d38b0d);
+      color: #101010
+    }
+
+    .btn-clear {
+      background: #20262e;
+      color: #c5cdd6;
+      border-color: #303945
+    }
+
+    .selected-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid #252e38;
+      background: #13181f;
+      border-radius: 11px;
+      margin-bottom: 8px
+    }
+
+    .item-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: #202730;
+      color: var(--gold2)
+    }
+
+    .item-main {
+      min-width: 0;
+      flex: 1
+    }
+
+    .item-main strong {
+      font-size: 12px;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .item-main span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px
+    }
+
+    .item-price {
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap
+    }
+
+    .remove-btn {
+      width: 27px;
+      height: 27px;
+      border-radius: 8px;
+      border: 1px solid #343e49;
+      background: #1b2129;
+      color: #9ba5b1;
+      font-size: 18px
+    }
+
+    .materials {
+      border-top: 1px solid var(--line);
+      margin-top: 17px;
+      padding-top: 16px
+    }
+
+    .material-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 12px
+    }
+
+    .material-row:nth-child(odd) {
+      background: #13181f
+    }
+
+    .material-row span {
+      color: #b7c0ca
+    }
+
+    .empty {
+      padding: 30px 10px;
+      text-align: center;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .empty-icon {
+      font-size: 30px;
+      opacity: .45;
+      margin-bottom: 8px
+    }
+
+    .empty strong {
+      font-size: 12px;
+      color: #c9d0d8
+    }
+
+    .empty span {
+      font-size: 10px;
+      margin-top: 4px
+    }
+
+    .empty-material {
+      padding: 12px;
+      text-align: center;
+      color: #65717f;
+      font-size: 11px
+    }
+
+    @media(max-width:950px) {
+      .sidebar {
+        width: 205px
+      }
+
+      .content {
+        margin-left: 205px;
+        width: calc(100% - 205px);
+        padding: 22px
+      }
+
+      .layout {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:680px) {
+      .app {
+        display: block
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 13px
+      }
+
+      .logo {
+        padding-bottom: 12px
+      }
+
+      .nav {
+        display: flex;
+        overflow: auto;
+        gap: 4px
+      }
+
+      .side-link {
+        width: auto;
+        white-space: nowrap;
+        padding: 9px 10px
+      }
+
+      .nav-title,
+      .side-note {
+        display: none
+      }
+
+      .content {
+        margin: 0;
+        width: 100%;
+        padding: 17px
+      }
+
+      .top-total {
+        display: none
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .stats .stat:last-child {
+        grid-column: 1/-1
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .full {
+        grid-column: auto
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">⚙</div>
+        <div>
+          <div class="logo-name">RACING PARTS</div><span class="logo-sub">PERFORMANCE SYSTEM</span>
+        </div>
+      </div>
+      <div class="nav-title">Catálogo</div>
+      <nav class="nav">
+        <button class="side-link active" data-cat="stag" onclick="selecionarCategoria('stag')"><span
+            class="ico">🏁</span> STAG</button>
+        <button class="side-link" data-cat="classificada" onclick="selecionarCategoria('classificada')"><span
+            class="ico">⚙️</span> Transmissão</button>
+        <button class="side-link" data-cat="outros" onclick="selecionarCategoria('outros')"><span class="ico">🛞</span>
+          Componentes</button><button class="side-link" data-cat="carros" onclick="selecionarCategoria('carros')"><span
+            class="ico">🚘</span> Valores dos carros</button>
+      </nav>
+      <div class="side-note">CALCULADORA DE FABRICAÇÃO<br>RACING PARTS</div>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Oficina • Performance</div>
+          <h1>Calculadora de Peças</h1>
+        </div>
+        <div class="top-total"><span>Total do projeto</span><b id="totalTopo">R$ 0,00</b></div>
+      </header>
+      <section class="stats">
+        <div class="stat">
+          <div class="stat-label">Peças selecionadas</div>
+          <div class="stat-value" id="itens">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">EXP necessária</div>
+          <div class="stat-value gold" id="exp">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Valor total</div>
+          <div class="stat-value" id="valor">R$ 0,00</div>
+        </div>
+      </section>
+      <section class="layout" id="builder">
+        <div class="card">
+          <div class="card-title">
+            <h2>Montar pedido</h2><span class="pill">FABRICAÇÃO</span>
+          </div>
+          <div class="form-grid">
+            <div class="full"><label>Categoria</label><select id="categoria" onchange="atualizarPecas()">
+                <option value="stag">STAG</option>
+                <option value="classificada">Peças STAG 5</option>
+                <option value="outros">Outras Peças</option>
+                <option value="carros">Valores Carros</option>
+              </select></div>
+            <div id="classeBox"><label>Classe</label><select id="classe" onchange="atualizarPecas()">
+                <option value="D">D</option>
+                <option value="C">C</option>
+                <option value="B">B</option>
+                <option value="A">A</option>
+                <option value="S">S</option>
+                <option value="OFFROAD">OFFROAD</option>
+                <option value="FERROVELHO">FERROVELHO</option>
+              </select></div>
+            <div id="stagBox"><label>Stag</label><select id="stag" onchange="atualizarPecas()">
+                <option value="1">Stag 1</option>
+                <option value="2">Stag 2</option>
+                <option value="3">Stag 3</option>
+                <option value="4">Stag 4</option>
+              </select></div>
+            <div class="full search"><label>Pesquisar peça</label><span class="search-icon">⌕</span><input id="pesquisa"
+                type="text" placeholder="Digite o nome da peça..."></div>
+            <div class="full"><label>Peça</label><select id="peca"></select></div>
+            <div><label>Quantidade</label><input id="quantidade" type="number" min="1" value="1"></div>
+          </div>
+          <div class="actions"><button class="btn btn-main" onclick="adicionar()">＋ Adicionar peça</button><button
+              class="btn btn-clear" onclick="limpar()">Limpar</button></div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <h2>Seu pedido</h2><span class="pill" id="badgeItens">0 ITENS</span>
+          </div>
+          <div id="lista"></div>
+          <div class="materials">
+            <div class="card-title">
+              <h2>Materiais necessários</h2><span class="pill">TOTAL</span>
+            </div>
+            <div id="materiais"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>const pecas = {
+      "Stag 1 D": { valor: 62000, exp: 65, materiais: { "AÇO TORQUELINE": 34, "TITANIO TORQUELINE": 13, "COBRE TORQUELINE": 10, "FERRO TORQUELINE": 28 } },
+      "Stag 2 D": { valor: 78000, exp: 85, materiais: { "AÇO TORQUELINE": 36, "TITANIO TORQUELINE": 15, "COBRE TORQUELINE": 36, "FERRO TORQUELINE": 32 } },
+      "Stag 3 D": { valor: 108000, exp: 105, materiais: { "PLASTICO POWERMAX": 13, "TITANIO POWERMAX": 23, "ALUMINIO POWERMAX": 36, "BORRACHA POWERMAX": 17 } },
+      "Stag 4 D": { valor: 198000, exp: 155, materiais: { "PLASTICO POWERMAX": 15, "TITANIO POWERMAX": 41, "ALUMINIO POWERMAX": 48, "BORRACHA POWERMAX": 33 } },
+
+      "Stag 1 C": { valor: 101000, exp: 65, materiais: { "FERRO TORQUELINE": 44, "TITANIO TORQUELINE": 22, "COBRE TORQUELINE": 16, "AÇO TORQUELINE": 54 } },
+      "Stag 2 C": { valor: 129000, exp: 85, materiais: { "FERRO TORQUELINE": 52, "TITANIO TORQUELINE": 26, "COBRE TORQUELINE": 59, "AÇO TORQUELINE": 59 } },
+      "Stag 3 C": { valor: 173000, exp: 105, materiais: { "PLASTICO POWERMAX": 19, "TITANIO POWERMAX": 26, "ALUMINIO POWERMAX": 64, "BORRACHA POWERMAX": 25 } },
+      "Stag 4 C": { valor: 240000, exp: 155, materiais: { "PLASTICO POWERMAX": 22, "TITANIO POWERMAX": 50, "ALUMINIO POWERMAX": 59, "BORRACHA POWERMAX": 42 } },
+
+      "Stag 1 B": { valor: 145000, exp: 65, materiais: { "AÇO TORQUELINE": 79, "TITANIO TORQUELINE": 34, "COBRE TORQUELINE": 25, "FERRO TORQUELINE": 65 } },
+      "Stag 2 B": { valor: 185000, exp: 85, materiais: { "AÇO TORQUELINE": 89, "TITANIO TORQUELINE": 40, "COBRE TORQUELINE": 86, "FERRO TORQUELINE": 78 } },
+      "Stag 3 B": { valor: 290000, exp: 105, materiais: { "PLASTICO POWERMAX": 32, "TITANIO POWERMAX": 49, "ALUMINIO POWERMAX": 82, "BORRACHA POWERMAX": 42 } },
+      "Stag 4 B": { valor: 439000, exp: 155, materiais: { "PLASTICO POWERMAX": 37, "TITANIO POWERMAX": 92, "ALUMINIO POWERMAX": 107, "BORRACHA POWERMAX": 75 } },
+
+      "Stag 1 A": { valor: 211500, exp: 65, materiais: { "FERRO TORQUELINE": 100, "TITANIO TORQUELINE": 48, "COBRE TORQUELINE": 36, "AÇO TORQUELINE": 122 } },
+      "Stag 2 A": { valor: 268500, exp: 85, materiais: { "FERRO TORQUELINE": 116, "TITANIO TORQUELINE": 60, "COBRE TORQUELINE": 131, "AÇO TORQUELINE": 131 } },
+      "Stag 3 A": { valor: 457000, exp: 105, materiais: { "PLASTICO POWERMAX": 52, "TITANIO POWERMAX": 81, "ALUMINIO POWERMAX": 143, "BORRACHA POWERMAX": 69 } },
+      "Stag 4 A": { valor: 711000, exp: 155, materiais: { "PLASTICO POWERMAX": 59, "TITANIO POWERMAX": 159, "ALUMINIO POWERMAX": 182, "BORRACHA POWERMAX": 125 } },
+
+      "FT/Chicote": { valor: 18000, exp: 10, materiais: { "COBRE RPM": 22, "PLASTICO RPM": 18 } },
+
+      "Kit Relação Class D": { valor: 30000, exp: 100, materiais: { "AÇO POWERDRIVE": 15, "FERRO POWERDRIVE": 12, "TITANIO POWERDRIVE": 6 } },
+      "Kit Relação Class C": { valor: 70000, exp: 100, materiais: { "AÇO POWERDRIVE": 35, "FERRO POWERDRIVE": 28, "TITANIO POWERDRIVE": 14 } },
+      "Kit Relação Class B": { valor: 140000, exp: 100, materiais: { "AÇO POWERDRIVE": 70, "FERRO POWERDRIVE": 56, "TITANIO POWERDRIVE": 28 } },
+      "Kit Relação Class A": { valor: 320000, exp: 100, materiais: { "AÇO POWERDRIVE": 160, "FERRO POWERDRIVE": 128, "TITANIO POWERDRIVE": 64 } },
+
+      "Cambio Sequancial Class D": { valor: 40000, exp: 100, materiais: { "AÇO POWERDRIVE": 20, "FERRO POWERDRIVE": 16, "TITANIO POWERDRIVE": 8 } },
+      "Cambio Sequancial Class C": { valor: 70000, exp: 100, materiais: { "AÇO POWERDRIVE": 40, "FERRO POWERDRIVE": 32, "TITANIO POWERDRIVE": 16 } },
+      "Cambio Sequancial Class B": { valor: 90000, exp: 100, materiais: { "AÇO POWERDRIVE": 70, "FERRO POWERDRIVE": 56, "TITANIO POWERDRIVE": 28 } },
+      "Cambio Sequancial Class A": { valor: 120000, exp: 100, materiais: { "AÇO POWERDRIVE": 120, "FERRO POWERDRIVE": 96, "TITANIO POWERDRIVE": 48 } },
+
+      "Tração 4X4 Class D": { valor: 80000, exp: 1000, materiais: { "AÇO POWERDRIVE": 40, "FERRO POWERDRIVE": 32, "BORRACHA POWERDRIVE": 16 } },
+      "Tração 4X4 Class C": { valor: 130000, exp: 1000, materiais: { "AÇO POWERDRIVE": 65, "FERRO POWERDRIVE": 52, "BORRACHA POWERDRIVE": 26 } },
+      "Tração 4X4 Class B": { valor: 180000, exp: 1000, materiais: { "AÇO POWERDRIVE": 90, "FERRO POWERDRIVE": 72, "TITANIO POWERDRIVE": 36 } },
+      "Tração 4X4 Class A": { valor: 230000, exp: 1000, materiais: { "AÇO POWERDRIVE": 160, "FERRO POWERDRIVE": 128, "TITANIO POWERDRIVE": 64 } },
+
+      "Freio De mão Drift": { valor: 8000, exp: 10, materiais: { "AÇO POWERDRIVE": 4, "FERRO POWERDRIVE": 3, "BORRACHA POWERDRIVE": 2 } },
+      "Kit Ângulo": { valor: 3000, exp: 10, materiais: { "AÇO POWERDRIVE": 2, "FERRO POWERDRIVE": 1, "BORRACHA POWERDRIVE": 1 } },
+
+      "Coilover": { valor: 15000, exp: 10, materiais: { "AÇO LOWKING": 14, "FERRO LOWKING": 20, "BORRACHA LOWKING": 14 } },
+
+      "Kit de Freio Ferodoz": { valor: 6000, exp: 10, materiais: { "FERRO": 10, "AÇO": 6, "BORRACHA": 6 } },
+      "Kit de Freio StoptechX": { valor: 12000, exp: 10, materiais: { "FERRO": 18, "AÇO": 12, "BORRACHA": 12 } },
+      "Kit de Freio Wilhood": { valor: 36000, exp: 5, materiais: { "FERRO": 56, "AÇO": 36, "BORRACHA": 36 } },
+      "Kit de Freio Brempo": { valor: 60000, exp: 5, materiais: { "FERRO": 80, "AÇO": 56, "BORRACHA": 56 } },
+
+      "Pneu Street": { valor: 4000, exp: 5, materiais: { "BORRACHA MAXTIRE": 8 } },
+      "Pneu Sport": { valor: 8000, exp: 5, materiais: { "BORRACHA MAXTIRE": 16 } },
+      "Pneu Race": { valor: 12000, exp: 5, materiais: { "BORRACHA MAXTIRE": 24 } },
+      "Pneu Semi-Slick": { valor: 20000, exp: 5, materiais: { "BORRACHA MAXTIRE": 40 } },
+      "Pneu Slick": { valor: 32000, exp: 5, materiais: { "BORRACHA MAXTIRE": 50 } },
+      "Pneu Drift": { valor: 12000, exp: 5, materiais: { "BORRACHA MAXTIRE": 24 } },
+      "Pneu Drag": { valor: 48000, exp: 5, materiais: { "BORRACHA MAXTIRE": 88 } }
+    };
+
+
+    // VALORES DOS CARROS POR CLASSE: altere nomes e preços neste bloco.
+    const carrosPorClasse = {
+      "D": {
+        'Apollo GLS2': 33000,
+        'BMW E36 Coupe': 92000,
+        'BMW E36 Conversível': 118000,
+        'Caravan': 88000,
+        'Civic SI 2008': 92000,
+        'Civic 92 Coupe': 62000,
+        'Gol GTS 93': 148000,
+        'Parati GLS 93': 42000,
+        'Golf MK4 VR6 2003': 320000,
+        'Galf MK3 VR6': 180000,
+        'Gol GTI 93': 158000,
+        'Honda Civic EG6': 88000,
+        'Marea Turbo': 62000,
+        'Marea Turbo 2': 62000,
+        'Marea Weekend': 62000,
+        'Santana Exclusive 1990': 140000,
+        'Santana Exclusive 2000': 32000,
+        'Saveiro G3 Surf 2003': 58000,
+        'Saveiro G1 summer': 138000,
+        'Saveiro g4 Sporline': 68000,
+        'Voyage': 42000,
+        'Gol GL Bola': 32000,
+        'Gol GTI Bola': 166000,
+        'Peugeot 207 Quick': 38000,
+        'Astra 99': 42000,
+        'Astra GSI': 92000,
+        'BMW 328 Touring': 114000,
+        'Calibra 97': 88000,
+        'Celta 2010': 24000,
+        'Corsa GSI 1.6 16V': 132000,
+        'Citroen DS3': 110000,
+        'Gol Copa 2006': 42000,
+        'Golf GTI MK1': 180000,
+        'Golf GTI Mk2': 172000,
+        'Honda CRX Del Sol': 72000,
+        'Ipanema': 28000,
+        'Polo GTS 2018': 88000,
+        'Fiat Punto T-Jet': 92000,
+        'Tempra Turbo': 118000,
+        'Uno Turbo': 78000,
+        'Vectra GSI': 97000,
+        'Volkswgen Vora 2004': 240000,
+        'Chevet GP 1970': 23000,
+        'Honda Civic Ek9': 280000,
+        'Chevete SL 1988': 32000,
+        'Gol Turbo 2003': 32000,
+        'Integra Type R DC2': 218000,
+        'Kadett GS': 48000,
+        'Chevet Monza Classic': 22000,
+        'Toyota MR2 Spyder ZZw30': 210000,
+        'Mazda MX-5': 320000,
+        'Nissan 180SX': 580000,
+        'Nissan 180SE': 580000,
+        'Omega': 58000,
+        'Passat B4 Variant': 210000,
+        'Peugeot 206 GTI': 29000,
+        'MR2 SW20 Turbo': 320000,
+        'Suprema': 58000,
+        'Chevette Tubarão': 23000,
+        'Jetta MK4 Wagon': 210000,
+        'Golf GTI Mk5': 480000,
+        'Audi A3 1.8T': 210000,
+        'Mercedes 190E': 380000,
+        'Citroën BX 1986': 280000,
+        'Seat Ibiza 6L': 180000,
+      },
+      "C": {
+        'TTMK1': 380000,
+        'EDS 2011': 310000,
+        'Lancer X': 980000,
+        'Impreza WRX 2022': 780000,
+        'Honda s2000': 670000,
+        'Rx-8 R': 680000,
+        'S14 Kouki': 790000,
+        'S14 Zenki': 790000,
+        'ER34': 830000,
+        'Type R': 940000,
+        'Cheser JZX100': 740000,
+        'GR Corolla': 780000,
+        'R32 V-Spec 2': 1680000,
+        'BRZ': 880000,
+        '350Z 2006': 1380000,
+        'Mazda RX-7 FD': 2380000,
+        'GR Yaris': 680000,
+        'Eclipse': 380000,
+        'R33 GT-R': 2880000,
+        'Supra A90': 2300000,
+        'R34 V-Spec 2 Nur': 12800000,
+        'Nissan Silvia S15': 1580000,
+        'BMW E46': 980000,
+      },
+      "B": {
+        'LFA': 14860000,
+        'M4 F82': 2200000,
+        'M3 E92': 1880000,
+        'CLS63 AMG': 2100000,
+        'C6 Z06': 1680000,
+        'E55 AMG': 1280000,
+        'F50': 28000000,
+        '911 GT3 RS': 8100000,
+        'M2 Comp': 1880000,
+        'M2 G87': 2200000,
+        'M5 V10': 2120000,
+        'GT-R R35 2007': 2480000,
+        'GT-R R35': 2680000,
+        'Sesto Elemento': 18800000,
+        'M4 CSL 2022': 2200000,
+        'Porsche 911 R': 4400000,
+        'R8 V10': 2200000,
+        'Porsche 718 GT4 RS': 4880000,
+        'Ferrari 458 Italia': 5680000,
+        'Mustang Dark Horse': 1880000,
+        'Chevrolet Camaro 2021': 1280000,
+      },
+      "A": {
+        'RS6 2020': 3800000,
+        'Carreta GT': 15000000,
+        'SL63 AMG 2022': 6980000,
+        'Ford GT 2017': 18800000,
+        'Ferrari J50': 18000000,
+        'Aventador 2012': 9200000,
+        'Aventador SVJ': 13800000,
+        'McLaren 765LT': 5800000,
+        'S63 AMG Coupe 2020': 2780000,
+        '911 TurboS': 3880000,
+        'Pagani ZondaR': 43000000,
+        'Jeep Grand Cherokee TrackHawk': 8800000,
+        'Aston Martin V8': 18800000,
+        'Audi RSQ8 2025': 2200000,
+        'Lamborghini Huracan': 5200000,
+        'McLaren Senna': 13800000,
+      },
+      "S": {
+        'Jesko Absolut': 55000000,
+        'CC850 2023': 48000000,
+        'Ferrari LaFerrari': 35000000,
+        'Bugatti Veyron': 18000000,
+        'Agera R 2013': 51000000,
+        'Lanborguini Revuelto': 12200000,
+        'Challenger SRT Demon 170': 14800000,
+        'Agera One1': 63000000,
+        'STG92': 18800000,
+        'Bugatti Chiron Super Sport': 52000000,
+      },
+      "OFFROAD": {
+        'Amarok v10': 1280000,
+        'Chev 3500': 570000,
+        'Chevrolet D20': 125000,
+        'Tundra 2023': 520000,
+        'Chev 3500': 570000,
+        'F-250 2008': 410000,
+        'F-450 Flatbed': 680000,
+        'Ford F-150 Raptor 2017': 650000,
+        'F-1000': 160000,
+        'Sierra Denali': 750000,
+        'Ram 1500': 580000,
+        'Ram SRT': 780000,
+        'Ram 1500 TRX': 750000,
+        'Ram 3500': 980000,
+        'Tacoma 2019': 380000,
+        'Tacoma 2024': 430000,
+        'Nissan Titan 2017': 420000,
+        'L200 Triton 2021': 310000,
+        'Silverado 2500': 580000,
+      },
+      "FERROVELHO": {
+        'Ferrari F40 Competizione': 14000000,
+        'Ferrari 288 GTO': 2100000,
+        'Ferrari Testarossa 87': 3400000,
+        'Lamborghini Diablo': 3900000,
+        'Cadillac Eldorado 1975': 280000,
+        'Cadillac Fleetwood': 280000,
+        'Chevrolet Opala 72 Sedan': 3100000,
+        'Chevrolet 53 Pickup': 3100000,
+        'Chevrolet Impala 1964': 280000,
+        'Chevrolet SS 69': 1680000,
+        'Chevrolet Diplomata': 3100000,
+        'Chevrolet Bel Air 1957': 280000,
+        'Chevrolet Vega': 3100000,
+        'Chevrolet Impala 72': 3100000,
+        'Dodge Dart 68 GTS': 680000,
+        'Dodge Charger 69 500': 550000,
+        'Dodge Charger 69 Daytona': 1880000,
+        'Dodge Charger 69 SE': 780000,
+        'Dodge Charger 69 RT': 2300000,
+        'Ford Maverick GT': 780000,
+        'Ford Falcon XR': 310000,
+        'Ford Fox Body 87': 330000,
+        'Audi Quatto S': 340000,
+        'Toyota Mark II JZX81': 280000,
+        'Plymauth GTX': 1880000,
+        'Plymauth Fury 69': 1480000,
+        'Pontiac FireBird 82': 1100000,
+        'Volkswagen Fusca 73': 60000,
+        'Volkswagen Kombi': 38000,
+        'Volkswagen Karmann Ghia 55': 42000,
+        'Nissan Skyline GTR R31': 2900000,
+        'Nissan Skyline GTR 2000 GT': 8000000,
+        'Nissan Skyline Laurel C33': 280000,
+        'Shelby GT5000 67': 2300000,
+        'Land Rover 1970': 210000,
+        'Mercury Cyclone Spoiler 70': 310000,
+        'Alfa Romeo GTA': 210000,
+        'BMW 735i 88': 380000,
+        'Chevy 69 Chevelle SS': 480000,
+      }
+    };
+    Object.entries(carrosPorClasse).forEach(([classe, lista]) => Object.entries(lista).forEach(([nome, valor]) => { pecas[`Carro ${classe} - ${nome}`] = { valor, exp: 0, materiais: {}, tipo: "carro" }; }));
+
+    let selecionadas = [];
+
+    function atualizarPecas() {
+      const cat = document.getElementById("categoria").value, classe = document.getElementById("classe").value, stag = document.getElementById("stag").value;
+      const cb = document.getElementById("classeBox"), sb = document.getElementById("stagBox"), sel = document.getElementById("peca");
+      let nomes = [];
+      if (cat === "stag") { cb.style.display = "block"; sb.style.display = "block"; nomes = [`Stag ${stag} ${classe}`]; }
+      else if (cat === "classificada") { cb.style.display = "block"; sb.style.display = "none"; nomes = Object.keys(pecas).filter(n => (n.startsWith("Kit Relação Class ") || n.startsWith("Cambio Sequancial Class ") || n.startsWith("Tração 4X4 Class ")) && n.endsWith("Class " + classe)); }
+      else if (cat === "carros") { cb.style.display = "block"; sb.style.display = "none"; nomes = Object.keys(carrosPorClasse[classe] || {}).map(n => `Carro ${classe} - ${n}`); }
+      else { cb.style.display = "none"; sb.style.display = "none"; nomes = Object.keys(pecas).filter(n => !n.startsWith("Stag ") && !n.startsWith("Kit Relação Class ") && !n.startsWith("Cambio Sequancial Class ") && !n.startsWith("Tração 4X4 Class ") && !n.startsWith("Carro ")); }
+      sel.innerHTML = nomes.map(n => { const label = n.startsWith("Carro ") ? n.replace(/^Carro [A-Z]+ - /, "") : n; return `<option value="${n}">${label}</option>` }).join("");
+      filtrarPecas();
+    }
+    function filtrarPecas() {
+      const q = (document.getElementById("pesquisa").value || "").toLowerCase().trim(), sel = document.getElementById("peca");
+      [...sel.options].forEach(o => o.hidden = !!q && !o.text.toLowerCase().includes(q));
+      const first = [...sel.options].find(o => !o.hidden); if (first) sel.value = first.value;
+    }
+    function dinheiro(v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+    function adicionar() {
+      const nome = document.getElementById("peca").value; if (!nome) return;
+      const qtd = Math.max(1, parseInt(document.getElementById("quantidade").value) || 1);
+      selecionadas.push({ nome, qtd }); document.getElementById("quantidade").value = 1; render();
+    }
+    function remover(i) { selecionadas.splice(i, 1); render(); }
+    function render() {
+      const lista = document.getElementById("lista");
+      if (!selecionadas.length) lista.innerHTML = `<div class="empty"><div class="empty-icon">🛒</div><strong>Nenhuma peça adicionada</strong><span>Selecione os componentes para montar seu pedido.</span></div>`;
+      else lista.innerHTML = selecionadas.map((x, i) => { const p = pecas[x.nome]; return `<div class="selected-item"><div class="item-icon">⚙</div><div class="item-main"><strong>${x.nome}</strong><span>${x.qtd} unidade(s)${p.tipo === "carro" ? " · Classe " + x.nome.match(/^Carro ([A-Z])/)[1] : " · " + ((p.exp || 0) * x.qtd) + " EXP"}</span></div><div class="item-price">${dinheiro(p.valor * x.qtd)}</div><button class="remove-btn" onclick="remover(${i})">×</button></div>` }).join("");
+      let valor = 0, exp = 0, itens = 0, mats = {};
+      selecionadas.forEach(x => { const p = pecas[x.nome]; valor += p.valor * x.qtd; exp += p.exp * x.qtd; itens += x.qtd; Object.entries(p.materiais).forEach(([m, q]) => mats[m] = (mats[m] || 0) + q * x.qtd); });
+      document.getElementById("valor").textContent = dinheiro(valor); document.getElementById("totalTopo").textContent = dinheiro(valor); document.getElementById("exp").textContent = exp.toLocaleString("pt-BR"); document.getElementById("itens").textContent = itens; document.getElementById("badgeItens").textContent = itens + " ITENS";
+      document.getElementById("materiais").innerHTML = Object.keys(mats).length ? Object.entries(mats).map(([m, q]) => `<div class="material-row"><span>${m}</span><b>${q}</b></div>`).join("") : `<div class="empty-material">Os materiais aparecerão aqui.</div>`;
+    }
+    function limpar() { selecionadas = []; render(); }
+    function selecionarCategoria(cat) { document.getElementById("categoria").value = cat; atualizarPecas(); document.querySelectorAll(".side-link").forEach(b => b.classList.toggle("active", b.dataset.cat === cat)); document.getElementById("builder").scrollIntoView({ behavior: "smooth", block: "start" }); }
+    document.addEventListener("DOMContentLoaded", () => { document.getElementById("pesquisa").addEventListener("input", filtrarPecas); atualizarPecas(); render(); });
+  </script>
+</body>
+
+</html>
